@@ -3,9 +3,9 @@ entries:
   neo4j-standalone:
   - apiVersion: v1
     appVersion: 4.4.6
-    created: "2022-06-09T15:55:49.08243+05:30"
+    created: "2022-06-09T15:59:13.209009+05:30"
     description: Neo4j is the world's leading graph database
-    digest: 6e3d60392a6cb89609d9f579cf106b5b408b3f4e55a11734eb6578634cf2af3f
+    digest: 6c7b089f63b86a67bc5239003fd308d96397efb09b5fb5b2c3a5b4a6a0dc98a7
     home: https://www.neo4j.com
     icon: http://info.neo4j.com/rs/773-GON-065/images/neo4j_logo.png
     keywords:
@@ -24,4 +24,4 @@ entries:
     urls:
     - https://kaustubh-cyble.github.io/neo4j-devtron-charts/neo4j-standalone-4.4.6.tgz
     version: 4.4.6
-generated: "2022-06-09T15:55:49.080074+05:30"
+generated: "2022-06-09T15:59:13.206915+05:30"

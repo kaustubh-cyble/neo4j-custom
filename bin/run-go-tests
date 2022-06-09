@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# This run `go test` for all tests defined in the internal module
+# The go test output is written to a .log file in the output directory as well as being printed to stdout
+
+# make bash play nicely
+#
+set -o pipefail -o errtrace -o errexit -o nounset
+shopt -s inherit_errexit
+[[ -n "${TRACE:-}" ]] && set -o xtrace
+
+# TODO: assert that kubernetes and gcloud are correctly configured?
+
+echo "Checking Go code formatting !!!"
+#perform gofmt and store the output in an array
+status_code=($(gofmt -l ./internal/))
+
+#if any elements found in array it means go code is not formatted and we should exit
+# we could have also used a single line test -z $(gofmt -l ./internal) but it would just exit because of errexit
+if [ "${#status_code[@]}" != 0 ]; then
+   echo "*********** PLEASE FORMAT YOUR GO CODE !! ***********"
+   exit 1
+fi
+
+# run go test and format the output for junit consumption
+#
+mkdir -p output
+
+# unit tests
+go test -c ./internal/unit_tests/
+go test -c ./internal/integration_tests/
+
+if [[ "${GO_TEST_FORMAT:-}" == "json" ]]; then
+  go tool test2json -t ./unit_tests.test -test.v --test.count ${GO_TEST_COUNT:-1} --test.timeout "${GO_TEST_TIMEOUT:-10m}" "$@" | tee output/go-unit-test.json
+  go tool test2json -t ./integration_tests.test -test.v --test.count ${GO_TEST_COUNT:-1} --test.timeout "${GO_TEST_TIMEOUT:-10m}" "$@" | tee output/go-integration-test.json
+else
+  ./unit_tests.test -test.v --test.count ${GO_TEST_COUNT:-1} --test.timeout "${GO_TEST_TIMEOUT:-10m}" "$@" | tee output/go-unit-test.log
+  ./integration_tests.test -test.v --test.count ${GO_TEST_COUNT:-1} --test.timeout "${GO_TEST_TIMEOUT:-10m}" "$@" | tee output/go-integration-test.log
+fi

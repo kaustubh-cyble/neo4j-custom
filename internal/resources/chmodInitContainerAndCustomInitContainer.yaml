@@ -1,0 +1,19 @@
+volumes:
+  data:
+    mode: "dynamic"
+
+  logs:
+    mode: volume
+    volume:
+      persistentVolumeClaim:
+        claimName: logs-filestore
+      setOwnerAndGroupWritableFilePermissions: true
+
+podSpec:
+  initContainers:
+    - name: init-printenv
+      command: [ 'sh', '-c', "printenv" ]
+
+  containers:
+    - name: maintenance-sidecar
+      command: [ 'bash', '-c', "while true; do sleep 120; done" ]

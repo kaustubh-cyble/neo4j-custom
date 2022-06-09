@@ -1,0 +1,10 @@
+volumes:
+  data:
+    mode: "dynamic"
+
+  logs:
+    mode: volume
+    volume:
+      persistentVolumeClaim:
+        claimName: logs-filestore
+      setOwnerAndGroupWritableFilePermissions: true

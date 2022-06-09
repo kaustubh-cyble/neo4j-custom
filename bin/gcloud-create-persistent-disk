@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+# This creates the expected persistent disk
+
+# make bash play nicely
+#
+set -o pipefail -o errtrace -o errexit -o nounset
+shopt -s inherit_errexit
+[[ -n "${TRACE:-}" ]] && set -o xtrace
+
+
+# Required env vars
+DISK_NAME="${1:?Missing argument. Usage: gcloud-create-persistent-disk <disk name>}"
+CLOUDSDK_COMPUTE_ZONE="${CLOUDSDK_COMPUTE_ZONE:?CLOUDSDK_COMPUTE_ZONE is required}"
+
+
+# Local vars
+DISK_SIZE="${DISK_SIZE:-100Gi}"
+NAMESPACE="${NAMESPACE:-default}"
+
+
+# Create disk if it doesn't already exist
+gcloud compute disks describe "${DISK_NAME}" 1>&2 || gcloud compute disks create --size "${DISK_SIZE}" --type pd-ssd --zone="${CLOUDSDK_COMPUTE_ZONE}" "${DISK_NAME}" 1>&2
+
+# Print the necessary yaml for use with our pv helm charts
+cat << EOF
+data:
+  capacity:
+    storage: "${DISK_SIZE}"
+  gcePersistentDisk: "${DISK_NAME}"
+EOF

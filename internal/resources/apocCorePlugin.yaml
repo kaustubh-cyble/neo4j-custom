@@ -1,3 +1,0 @@
-config:
-  "dbms.security.procedures.unrestricted": "apoc.*"
-  "dbms.directories.plugins": "/var/lib/neo4j/labs"

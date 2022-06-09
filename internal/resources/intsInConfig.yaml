@@ -1,6 +1,0 @@
-volumes:
-  data:
-    mode: "dynamic"
-
-config:
-  metrics.csv.rotation.keep_number: 2

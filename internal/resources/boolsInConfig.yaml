@@ -1,6 +1,0 @@
-volumes:
-  data:
-    mode: "dynamic"
-
-config:
-  metrics.enabled: true
